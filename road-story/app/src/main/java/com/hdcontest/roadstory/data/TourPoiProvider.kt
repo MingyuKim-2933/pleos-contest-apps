@@ -9,6 +9,7 @@ import com.hdcontest.roadstory.core.TourContentType
 import com.hdcontest.roadstory.core.TourErrorMessages
 import com.hdcontest.roadstory.core.TourFetchPolicy
 import com.hdcontest.roadstory.core.TourItem
+import com.hdcontest.roadstory.core.TourNotability
 import com.hdcontest.roadstory.core.TourPoiMapper
 import com.hdcontest.roadstory.core.TourResult
 import kotlinx.coroutines.CoroutineScope
@@ -75,15 +76,17 @@ class TourPoiProvider(
     private suspend fun refresh(at: GeoPoint) {
         Log.i(TAG, "TourAPI 조회 시작: ${at.latitude}, ${at.longitude}")
         val results = withContext(Dispatchers.IO) {
-            TourContentType.entries.map { type ->
+            TourContentType.entries.filter { it.queried }.map { type ->
                 client.locationBasedList(at.latitude, at.longitude, type).also {
                     Log.d(TAG, "${type.label}: ${(it as? TourResult.Success)?.value?.size ?: it}")
                 }
             }
         }
-        val fetched = results.filterIsInstance<TourResult.Success<List<TourItem>>>().flatMap { it.value }
+        val received = results.filterIsInstance<TourResult.Success<List<TourItem>>>().flatMap { it.value }
+        // 이름만 듣고 알기 어려운 곳은 개요를 받기 전에 걸러 호출 수를 아낀다.
+        val fetched = received.filter(TourNotability::isNotable)
         val failure = results.filterIsInstance<TourResult.Failure>().firstOrNull()
-        if (fetched.isEmpty() && failure != null) {
+        if (received.isEmpty() && failure != null) {
             policy.onFailure(System.currentTimeMillis())
             Log.w(TAG, "TourAPI 조회 실패: ${failure.code} ${failure.message}")
             // 같은 오류를 반복해서 띄우지 않는다.
@@ -145,6 +148,7 @@ class TourPoiProvider(
                     .put("address", it.address)
                     .put("latitude", it.latitude)
                     .put("longitude", it.longitude)
+                    .put("classCode", it.classCode)
                     .put("overview", overviews[it.contentId]),
             )
         }
@@ -165,6 +169,7 @@ class TourPoiProvider(
                 address = o.optString("address"),
                 latitude = o.getDouble("latitude"),
                 longitude = o.getDouble("longitude"),
+                classCode = o.optString("classCode"),
             )
             items[item.contentId] = item
             if (o.has("overview") && !o.isNull("overview")) overviews[item.contentId] = o.getString("overview")

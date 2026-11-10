@@ -11,7 +11,7 @@ class TourApiTest {
         {"response":{"header":{"resultCode":"0000","resultMsg":"OK"},
          "body":{"items":{"item":[
            {"addr1":"경기도 광주시 남한산성면 남한산성로 731","addr2":"","contentid":"126509","contenttypeid":"12",
-            "dist":"812.3","mapx":"127.1820","mapy":"37.4784","title":"남한산성"},
+            "dist":"812.3","mapx":"127.1820","mapy":"37.4784","title":"남한산성","lclsSystm3":"HS010100"},
            {"addr1":"경기도 성남시 분당구 판교역로 1","contentid":"999","contenttypeid":"39",
             "mapx":"127.1100","mapy":"37.3950","title":"판교 국수집"},
            {"contentid":"1000","contenttypeid":"39","mapx":"","mapy":"","title":"좌표 없음"}
@@ -81,17 +81,46 @@ class TourApiTest {
     @Test
     fun `TourAPI 항목을 Poi 로 바꾸고 개요가 없으면 기본 문장을 쓴다`() {
         val items = (TourApiParser.parseList(listJson) as TourResult.Success).value
-        val restaurant = TourPoiMapper.toPoi(items[1], overview = null)!!
-        assertEquals("tour-999", restaurant.id)
-        assertEquals("맛집", restaurant.category)
-        assertEquals(200f, restaurant.radiusMeters)
-        assertEquals("한국관광공사에 등록된 맛집이에요.", restaurant.story)
+        val fortress = TourPoiMapper.toPoi(items[0], overview = null)!!
+        assertEquals("tour-126509", fortress.id)
+        assertEquals("역사 유적", fortress.category)
+        assertEquals(1_500f, fortress.radiusMeters)
+        assertEquals(Poi.LISTED, fortress.prominence)
+        assertEquals("한국관광공사에 등록된 역사 유적이에요.", fortress.story)
 
-        val street = TourPoiMapper.toPoi(items[1].copy(title = "신해철거리(성남)"), overview = null)!!
-        assertEquals("신해철거리", street.name)
+        val street = TourPoiMapper.toPoi(
+            items[0].copy(title = "단대동 닭죽촌(성남)", classCode = "VE040100"), overview = "",
+        )!!
+        assertEquals("단대동 닭죽촌", street.name)
+        assertEquals("맛집 거리", street.category)
+    }
 
-        val attraction = TourPoiMapper.toPoi(items[0], overview = "")!!
-        assertEquals("한국관광공사에 등록된 관광지예요.", attraction.story)
+    @Test
+    fun `이름만으로 알기 어려운 곳은 거른다`() {
+        val base = TourItem("1", "12", "", "", 37.0, 127.0)
+        val kept = listOf(
+            base.copy(title = "남한산성", classCode = "HS010100"),
+            base.copy(title = "청계산", classCode = "NA010100"),
+            base.copy(title = "현대백화점", classCode = "SH010100"),
+            base.copy(title = "모란시장", classCode = "SH060100"),
+            base.copy(title = "효자촌 먹자골목", classCode = "VE040100"),
+        )
+        val dropped = listOf(
+            base.copy(title = "능골공원", classCode = "VE030100"),            // 근린공원
+            base.copy(title = "책테마파크도서관", classCode = "VE090100"),     // 교육시설
+            base.copy(title = "모란차량사업소", classCode = "EX060600"),       // 산업관광
+            base.copy(title = "신해철거리", classCode = "VE040100"),           // 음식 거리가 아님
+            base.copy(title = "판교 국수집", classCode = "FD010100"),          // 개별 음식점
+            base.copy(title = "분류 없음", classCode = ""),
+        )
+        kept.forEach { assertTrue(it.title, TourNotability.isNotable(it)) }
+        dropped.forEach { assertFalse(it.title, TourNotability.isNotable(it)) }
+    }
+
+    @Test
+    fun `개별 음식점은 기본으로 조회하지 않는다`() {
+        assertFalse(TourContentType.RESTAURANT.queried)
+        assertTrue(TourContentType.ATTRACTION.queried)
     }
 
     @Test

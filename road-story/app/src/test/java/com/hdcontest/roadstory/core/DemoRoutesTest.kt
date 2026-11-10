@@ -40,6 +40,7 @@ class DemoRoutesTest {
                 Poi("mr", "모란시장", "", 37.4318, 127.1290, 500f, "", ""),
                 Poi("nh", "남한산성", "", 37.4784, 127.1820, 1200f, "", ""),
             ),
+            trigger = TriggerDistance.RADIUS_ONLY,
         )
         val narrated = mutableListOf<String>()
         val pts = DemoRoutes.SEONGNAM.points
@@ -52,5 +53,34 @@ class DemoRoutesTest {
             }
         }
         assertEquals(listOf("tv", "hd", "mr", "nh"), narrated)
+    }
+
+    @Test
+    fun `판교 경로를 데모 속도(시속 약 100km)로 달리면 명소를 모두 미리 안내한다`() {
+        val planner = NarrationPlanner(
+            listOf(
+                Poi("tv", "판교 테크노밸리", "", 37.4019, 127.1086, 600f, "", "", Poi.CURATED),
+                Poi("hd", "현대백화점 판교점", "", 37.3925, 127.1121, 500f, "", "", Poi.CURATED),
+                Poi("mr", "모란시장", "", 37.4318, 127.1290, 500f, "", "", Poi.CURATED),
+                Poi("nh", "남한산성", "", 37.4784, 127.1820, 1200f, "", "", Poi.CURATED),
+            ),
+        )
+        val narrated = mutableListOf<String>()
+        val pts = DemoRoutes.SEONGNAM.points
+        var t = 0L
+        for (i in 0 until pts.lastIndex) {
+            val a = pts[i]
+            val b = pts[i + 1]
+            val len = GeoUtils.distanceMeters(a.latitude, a.longitude, b.latitude, b.longitude)
+            val heading = GeoUtils.bearingDegrees(a.latitude, a.longitude, b.latitude, b.longitude).toFloat()
+            var m = 0.0
+            while (m < len) {
+                val p = GeoUtils.interpolate(a, b, m / len)
+                planner.onLocation(p.latitude, p.longitude, t, heading)?.let { narrated += it.id }
+                m += 28.0
+                t += 1_000
+            }
+        }
+        assertEquals(setOf("tv", "hd", "mr", "nh"), narrated.toSet())
     }
 }

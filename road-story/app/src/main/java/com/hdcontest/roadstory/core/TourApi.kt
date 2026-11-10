@@ -8,7 +8,10 @@ import org.json.JSONObject
  * 네트워크 호출은 data/TourApiClient 가 맡고, 여기서는 파싱·변환만 해서 단위 테스트로 검증한다.
  */
 
-/** 안내에 쓰는 관광 타입. [radiusMeters] 는 이 반경 안에 들어오면 안내를 시작하는 거리. */
+/**
+ * 안내에 쓰는 관광 타입.
+ * [radiusMeters] 는 기본 안내 거리 (실제로는 속도에 따라 더 멀리서 시작한다, [TriggerDistance]).
+ */
 enum class TourContentType(
     val code: String,
     val label: String,
@@ -16,11 +19,13 @@ enum class TourContentType(
     /** locationBasedList2 조회 반경 (최대 20000m) */
     val searchRadiusMeters: Int,
     val maxItems: Int,
+    /** 조회 여부. 개별 음식점은 대부분 지역 소규모 매장이라 기본으로 조회하지 않는다. */
+    val queried: Boolean = true,
 ) {
-    ATTRACTION("12", "관광지", 700f, 5_000, 20),
-    CULTURE("14", "문화시설", 400f, 3_000, 10),
-    SHOPPING("38", "쇼핑", 300f, 2_000, 5),
-    RESTAURANT("39", "맛집", 200f, 1_500, 10);
+    ATTRACTION("12", "관광지", 1_500f, 10_000, 40),
+    CULTURE("14", "문화시설", 1_000f, 5_000, 20),
+    SHOPPING("38", "쇼핑", 1_000f, 5_000, 10),
+    RESTAURANT("39", "맛집", 800f, 3_000, 20, queried = false);
 
     companion object {
         fun fromCode(code: String?): TourContentType? = entries.firstOrNull { it.code == code }
@@ -34,6 +39,8 @@ data class TourItem(
     val address: String,
     val latitude: Double,
     val longitude: Double,
+    /** 관광 분류체계 코드 (lclsSystm3, 예: HS010100). 앞 4자리가 중분류. */
+    val classCode: String = "",
 )
 
 sealed interface TourResult<out T> {
@@ -63,6 +70,7 @@ object TourApiParser {
                         .filter { it.isNotBlank() }.joinToString(" "),
                     latitude = lat,
                     longitude = lng,
+                    classCode = o.optString("lclsSystm3").ifBlank { o.optString("lclsSystm2") },
                 )
             }
         }
@@ -144,25 +152,58 @@ object OverviewSummarizer {
         .replace("&amp;", "&")
 }
 
+/**
+ * 운전자가 이름만 듣고도 바로 알 만한 장소만 고른다.
+ *
+ * TourAPI 에는 동네 근린공원·도서관·산업시설 견학 같은 곳도 관광지로 등록되어 있어,
+ * 분류체계(lclsSystm) 중분류로 걸러 역사 유적·자연 명소·랜드마크·백화점·전통시장·음식 거리 위주로 남긴다.
+ */
+object TourNotability {
+
+    private val labels = mapOf(
+        "HS01" to "역사 유적", "HS02" to "역사 유적", "HS03" to "종교 성지", "HS04" to "안보 관광지",
+        // 자연공원(NA04)은 동네 도시자연공원이 많아 제외한다.
+        "NA01" to "산", "NA02" to "강·호수·바다",
+        "VE01" to "랜드마크", "VE02" to "테마파크", "VE05" to "복합 관광지", "VE06" to "공연장", "VE07" to "전시관",
+        "SH01" to "백화점", "SH02" to "쇼핑몰", "SH04" to "면세점", "SH06" to "전통시장",
+    )
+
+    /** 도시·지역문화관광(VE04) 가운데 음식 거리만 남긴다 (예: 먹자골목, 닭죽촌, 음식마을). */
+    private const val FOOD_STREET = "VE04"
+    private val foodStreetName = Regex("맛집|먹자|음식|골목|촌|카페거리|시장")
+
+    fun categoryOf(item: TourItem): String? {
+        val mid = item.classCode.take(4)
+        labels[mid]?.let { return it }
+        if (mid == FOOD_STREET && foodStreetName.containsMatchIn(item.title)) return "맛집 거리"
+        return null
+    }
+
+    fun isNotable(item: TourItem) = categoryOf(item) != null
+}
+
 object TourPoiMapper {
 
     const val ID_PREFIX = "tour-"
     private val trailingParen = Regex("\\s*\\([^)]*\\)\\s*$")
 
+    /** 이름만으로 알기 어려운 장소(근린공원, 도서관 등)는 null. */
     fun toPoi(item: TourItem, overview: String?): Poi? {
         val type = TourContentType.fromCode(item.contentTypeId) ?: return null
+        val category = TourNotability.categoryOf(item) ?: return null
         val story = overview?.let(OverviewSummarizer::summarize).orEmpty()
-            .ifBlank { "한국관광공사에 등록된 ${type.label}${NarrationScript.copula(type.label)}." }
+            .ifBlank { "한국관광공사에 등록된 ${category}${NarrationScript.copula(category)}." }
         return Poi(
             id = ID_PREFIX + item.contentId,
             // "신해철거리(성남)" 처럼 끝에 붙은 지역 괄호는 TTS 가 그대로 읽으므로 뺀다.
             name = item.title.replace(trailingParen, "").ifBlank { item.title },
-            category = type.label,
+            category = category,
             latitude = item.latitude,
             longitude = item.longitude,
             radiusMeters = type.radiusMeters,
             address = item.address,
             story = story,
+            prominence = Poi.LISTED,
         )
     }
 }

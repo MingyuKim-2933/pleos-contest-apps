@@ -21,6 +21,7 @@ object PoiRepository {
                 radiusMeters = o.optDouble("radiusMeters", 500.0).toFloat(),
                 address = o.optString("address", ""),
                 story = o.getString("story"),
+                prominence = Poi.CURATED,
             )
         }
     }

@@ -27,7 +27,8 @@ class TourApiClient(serviceKey: String) {
                 "mapY" to latitude.toString(),
                 "radius" to type.searchRadiusMeters.toString(),
                 "contentTypeId" to type.code,
-                "arrange" to "E", // 거리순
+                // 거리순 + 대표 이미지가 있는 곳만 (사진까지 등록된 곳이 대체로 잘 알려진 곳이다)
+                "arrange" to "S",
                 "numOfRows" to type.maxItems.toString(),
                 "pageNo" to "1",
             ),

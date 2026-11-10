@@ -178,5 +178,175 @@
     "radiusMeters": 1200,
     "address": "경기 광주시 남한산성면 남한산성로 731",
     "story": "병자호란 때 조선 인조가 47일 동안 피신해 맞섰던 산성이에요. 2014년 유네스코 세계유산에 등재됐고, 성곽길을 따라 걸으면 서울과 성남 시내가 내려다보여요."
+  },
+  {
+    "id": "gwangjang-market",
+    "name": "광장시장",
+    "category": "전통시장",
+    "latitude": 37.57,
+    "longitude": 126.9997,
+    "radiusMeters": 800,
+    "address": "서울 종로구 창경궁로 88",
+    "story": "1905년에 문을 연, 국내에서 가장 오래된 상설시장 가운데 하나예요. 녹두 빈대떡과 육회, 마약김밥이 유명해서 외국인 관광객도 많이 찾아요."
+  },
+  {
+    "id": "myeongdong",
+    "name": "명동",
+    "category": "쇼핑 거리",
+    "latitude": 37.5637,
+    "longitude": 126.9838,
+    "radiusMeters": 700,
+    "address": "서울 중구 명동길 일대",
+    "story": "서울을 대표하는 쇼핑 거리예요. 저녁이면 길거리 음식 노점이 줄지어 서고, 근처에는 1898년에 지어진 명동성당도 있어요."
+  },
+  {
+    "id": "yeouido-hangang",
+    "name": "여의도 한강공원",
+    "category": "공원",
+    "latitude": 37.5285,
+    "longitude": 126.9326,
+    "radiusMeters": 1200,
+    "address": "서울 영등포구 여의동로 330",
+    "story": "봄에는 윤중로 벚꽃길, 가을에는 서울세계불꽃축제로 유명한 한강공원이에요. 강바람을 맞으며 쉬어 가기 좋아요."
+  },
+  {
+    "id": "starfield-library",
+    "name": "코엑스 별마당 도서관",
+    "category": "랜드마크",
+    "latitude": 37.5104,
+    "longitude": 127.06,
+    "radiusMeters": 800,
+    "address": "서울 강남구 영동대로 513",
+    "story": "2017년에 문을 연 코엑스몰 한가운데의 열린 도서관이에요. 13미터 높이의 거대한 서가가 명물이라 사진 명소로도 유명해요."
+  },
+  {
+    "id": "yuldong-park",
+    "name": "율동공원",
+    "category": "공원",
+    "latitude": 37.3805,
+    "longitude": 127.15,
+    "radiusMeters": 800,
+    "address": "경기 성남시 분당구 문정로 72",
+    "story": "분당을 대표하는 호수공원이에요. 호수를 한 바퀴 도는 산책로가 있고, 호수 위로 뛰어내리는 번지점프대로도 유명해요."
+  },
+  {
+    "id": "everland",
+    "name": "에버랜드",
+    "category": "테마파크",
+    "latitude": 37.2939,
+    "longitude": 127.2025,
+    "radiusMeters": 2000,
+    "address": "경기 용인시 처인구 포곡읍 에버랜드로 199",
+    "story": "1976년 자연농원으로 문을 연 국내 대표 테마파크예요. 판다 가족이 사는 판다월드와 나무 레일 롤러코스터 T익스프레스로 유명해요."
+  },
+  {
+    "id": "korean-folk-village",
+    "name": "한국민속촌",
+    "category": "민속 마을",
+    "latitude": 37.259,
+    "longitude": 127.118,
+    "radiusMeters": 1200,
+    "address": "경기 용인시 기흥구 민속촌로 90",
+    "story": "1974년에 문을 연 야외 민속 박물관이에요. 조선 시대 마을을 그대로 재현해 사극 촬영지로도 자주 쓰여요."
+  },
+  {
+    "id": "suwon-chicken-street",
+    "name": "수원 통닭거리",
+    "category": "맛집 거리",
+    "latitude": 37.2797,
+    "longitude": 127.0176,
+    "radiusMeters": 800,
+    "address": "경기 수원시 팔달구 팔달문 일대",
+    "story": "수원 화성 팔달문 근처에 통닭집이 모여 있는 거리예요. 가마솥에 튀겨 내는 옛날 통닭이 유명해서 화성 구경 뒤에 많이 들러요."
+  },
+  {
+    "id": "jeonju-hanok",
+    "name": "전주한옥마을",
+    "category": "마을",
+    "latitude": 35.8151,
+    "longitude": 127.153,
+    "radiusMeters": 1500,
+    "address": "전북 전주시 완산구 기린대로 99",
+    "story": "700여 채의 한옥이 모여 있는 도심 속 한옥마을이에요. 전주비빔밥과 길거리 음식을 맛보며 걷기 좋고, 근처에 경기전과 전동성당도 있어요."
+  },
+  {
+    "id": "chuncheon-dakgalbi",
+    "name": "춘천 명동 닭갈비골목",
+    "category": "맛집 거리",
+    "latitude": 37.8805,
+    "longitude": 127.727,
+    "radiusMeters": 800,
+    "address": "강원 춘천시 명동 일대",
+    "story": "춘천 닭갈비를 대표하는 골목이에요. 큰 철판에 닭고기와 양배추, 떡을 볶아 먹고, 마지막에 밥을 볶아 마무리하는 게 정석이에요."
+  },
+  {
+    "id": "jagalchi",
+    "name": "자갈치시장",
+    "category": "전통시장",
+    "latitude": 35.0966,
+    "longitude": 129.0306,
+    "radiusMeters": 800,
+    "address": "부산 중구 자갈치해안로 52",
+    "story": "국내 최대 규모의 수산시장으로 꼽혀요. 오이소, 보이소, 사이소라는 구호로 유명하고, 시장에서 바로 회를 맛볼 수 있어요."
+  },
+  {
+    "id": "gwangalli",
+    "name": "광안리해수욕장",
+    "category": "해변",
+    "latitude": 35.1532,
+    "longitude": 129.1186,
+    "radiusMeters": 1200,
+    "address": "부산 수영구 광안해변로 219",
+    "story": "광안대교가 한눈에 보이는 해변이에요. 밤에는 다리 조명이 켜져 야경 명소로 손꼽히고, 가을에는 부산불꽃축제가 열려요."
+  },
+  {
+    "id": "sokcho-market",
+    "name": "속초관광수산시장",
+    "category": "전통시장",
+    "latitude": 38.2048,
+    "longitude": 128.5905,
+    "radiusMeters": 800,
+    "address": "강원 속초시 중앙로147번길 16",
+    "story": "속초를 대표하는 전통시장이에요. 달콤한 닭강정과 오징어순대가 특히 유명해서 여행객들이 꼭 들르는 곳이에요."
+  },
+  {
+    "id": "anmok-coffee",
+    "name": "안목해변 커피거리",
+    "category": "카페 거리",
+    "latitude": 37.772,
+    "longitude": 128.9475,
+    "radiusMeters": 800,
+    "address": "강원 강릉시 창해로 일대",
+    "story": "바다를 따라 카페가 줄지어 선 강릉의 커피 거리예요. 자판기 커피로 시작해 지금은 강릉을 커피 도시로 알린 명소가 됐어요."
+  },
+  {
+    "id": "hwangnidan",
+    "name": "황리단길",
+    "category": "거리",
+    "latitude": 35.8381,
+    "longitude": 129.2096,
+    "radiusMeters": 800,
+    "address": "경북 경주시 포석로 일대",
+    "story": "한옥을 고쳐 만든 카페와 식당이 모여 있는 경주의 인기 거리예요. 대릉원과 첨성대가 가까워 함께 둘러보기 좋아요."
+  },
+  {
+    "id": "seongsan-ilchulbong",
+    "name": "성산일출봉",
+    "category": "자연 명소",
+    "latitude": 33.4581,
+    "longitude": 126.9425,
+    "radiusMeters": 2000,
+    "address": "제주 서귀포시 성산읍 성산리 1",
+    "story": "바다에서 분출한 화산이 만든 분화구예요. 2007년 유네스코 세계자연유산에 등재됐고, 정상에서 보는 해돋이가 유명해요."
+  },
+  {
+    "id": "dongmun-market",
+    "name": "제주 동문시장",
+    "category": "전통시장",
+    "latitude": 33.5118,
+    "longitude": 126.5265,
+    "radiusMeters": 800,
+    "address": "제주 제주시 관덕로14길 20",
+    "story": "제주시에서 가장 오래된 상설시장으로 꼽혀요. 귤과 흑돼지, 고등어회를 맛볼 수 있고 저녁에는 야시장이 열려요."
   }
 ]

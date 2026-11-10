@@ -131,7 +131,8 @@ class GuideEngine(context: Context) : LocationSource.Listener {
         tour.onLocation(location.latitude, location.longitude)
         val nearby = planner.nearby(location.latitude, location.longitude, location.heading)
         _state.update { it.copy(nearby = nearby) }
-        planner.onLocation(location.latitude, location.longitude, System.currentTimeMillis())?.let(::enqueue)
+        planner.onLocation(location.latitude, location.longitude, System.currentTimeMillis(), location.heading)
+            ?.let(::enqueue)
     }
 
     override fun onProximityEnter(poiId: String) {
