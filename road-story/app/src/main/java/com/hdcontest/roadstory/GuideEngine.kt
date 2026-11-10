@@ -66,6 +66,13 @@ class GuideEngine(context: Context) : LocationSource.Listener {
     private var pendingPoi: Poi? = null
     private var repeatUsed = false
 
+    /** "들러줘" 직후에는 내비가 경로 안내 음성을 내므로, 이 시각까지 새 안내를 미룬다. */
+    private var quietUntilMs = 0L
+    private val resumeAfterQuiet = Runnable {
+        // 그사이 사용자가 다시 듣기 등으로 안내를 시작했다면 그 흐름이 끝날 때 이어간다.
+        if (_state.value.phase == GuidePhase.IDLE) finishInteraction()
+    }
+
     private val _state = MutableStateFlow(GuideUiState(status = appContext.getString(R.string.status_ready)))
     val state: StateFlow<GuideUiState> = _state.asStateFlow()
 
@@ -111,7 +118,9 @@ class GuideEngine(context: Context) : LocationSource.Listener {
         source = null
         voice.stopAll()
         handler.removeCallbacks(phaseWatchdog)
+        handler.removeCallbacks(resumeAfterQuiet)
         pendingPoi = null
+        quietUntilMs = 0L
         _state.update {
             it.copy(running = false, phase = GuidePhase.IDLE, status = appContext.getString(R.string.status_ready))
         }
@@ -178,12 +187,17 @@ class GuideEngine(context: Context) : LocationSource.Listener {
     }
 
     private fun enqueue(poi: Poi) {
-        if (_state.value.phase == GuidePhase.IDLE) {
+        if (_state.value.phase == GuidePhase.IDLE && System.currentTimeMillis() >= quietUntilMs) {
             repeatUsed = false
             narrate(poi)
         } else {
             // 안내 중에 다른 장소에 진입하면 가장 최근 장소 하나만 대기시킨다.
             pendingPoi = poi
+            val quietLeft = quietUntilMs - System.currentTimeMillis()
+            if (_state.value.phase == GuidePhase.IDLE && quietLeft > 0) {
+                handler.removeCallbacks(resumeAfterQuiet)
+                handler.postDelayed(resumeAfterQuiet, quietLeft)
+            }
         }
     }
 
@@ -246,17 +260,32 @@ class GuideEngine(context: Context) : LocationSource.Listener {
             )
         }
         armWatchdog()
-        voice.speak(message) { finishInteraction() }
+        voice.speak(message) {
+            // 내비가 경로 안내를 시작하며 말하는 동안 끼어들지 않는다.
+            if (visited) quietUntilMs = System.currentTimeMillis() + NAVI_QUIET_MS
+            finishInteraction()
+        }
     }
 
     private fun finishInteraction() {
         handler.removeCallbacks(phaseWatchdog)
         _state.update { it.copy(phase = GuidePhase.IDLE) }
-        pendingPoi?.let {
-            pendingPoi = null
-            repeatUsed = false
-            narrate(it)
+        val quietLeft = quietUntilMs - System.currentTimeMillis()
+        if (quietLeft > 0) {
+            // 대기 중인 장소는 조용한 시간이 끝난 뒤에 안내한다.
+            if (pendingPoi != null) {
+                handler.removeCallbacks(resumeAfterQuiet)
+                handler.postDelayed(resumeAfterQuiet, quietLeft)
+            }
+            return
         }
+        val next = pendingPoi ?: return
+        pendingPoi = null
+        // 기다리는 사이 이미 지나쳤거나 멀어진 곳은 안내하지 않는다.
+        val here = lastLocation
+        if (here != null && !planner.isStillAhead(next, here.latitude, here.longitude, here.heading)) return
+        repeatUsed = false
+        narrate(next)
     }
 
     private fun armWatchdog() {
@@ -266,5 +295,6 @@ class GuideEngine(context: Context) : LocationSource.Listener {
 
     private companion object {
         const val WATCHDOG_MS = 90_000L
+        const val NAVI_QUIET_MS = 30_000L
     }
 }

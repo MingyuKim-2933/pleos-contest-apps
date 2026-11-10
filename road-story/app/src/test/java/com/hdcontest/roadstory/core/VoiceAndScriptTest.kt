@@ -8,7 +8,7 @@ class VoiceAndScriptTest {
 
     @Test
     fun `방문 의사 표현을 인식한다`() {
-        listOf("들러줘", "응 가자", "네", "경유지로 추가해 줘", "좋아").forEach {
+        listOf("들러줘", "들려줘", "응 가자", "네", "경유지로 추가해 줘", "좋아").forEach {
             assertEquals(it, VoiceIntent.VISIT, VoiceIntentParser.parse(it))
         }
     }
@@ -23,6 +23,7 @@ class VoiceAndScriptTest {
     @Test
     fun `다시 듣기와 빈 입력`() {
         assertEquals(VoiceIntent.REPEAT, VoiceIntentParser.parse("다시 말해줘"))
+        assertEquals(VoiceIntent.REPEAT, VoiceIntentParser.parse("다시 들려줘"))
         assertEquals(VoiceIntent.UNKNOWN, VoiceIntentParser.parse(null))
         assertEquals(VoiceIntent.UNKNOWN, VoiceIntentParser.parse("오늘 날씨 어때"))
     }

@@ -102,6 +102,14 @@ class NarrationPlanner(
         speedMps = if (speedMps == 0.0) instant else speedMps * 0.6 + instant * 0.4
     }
 
+    /**
+     * 기다리던 장소를 지금 안내해도 되는지. 안내를 미루는 사이 안내 거리 밖으로 벗어났거나 지나쳤다면 false.
+     */
+    fun isStillAhead(poi: Poi, latitude: Double, longitude: Double, heading: Float? = null): Boolean {
+        val d = GeoUtils.distanceMeters(latitude, longitude, poi.latitude, poi.longitude)
+        return d <= trigger.forPoi(poi, speedMps) && !isBehind(latitude, longitude, heading, poi, d)
+    }
+
     /** 같은 ID 의 최신 장소 정보 (TourAPI 개요가 나중에 채워지는 경우를 위해). */
     fun find(poiId: String): Poi? = poiById[poiId]
 

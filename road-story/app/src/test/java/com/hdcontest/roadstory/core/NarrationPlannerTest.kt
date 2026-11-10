@@ -106,5 +106,16 @@ class NarrationPlannerTest {
         assertEquals(famous, planner.onLocation(origin.latitude, origin.longitude, 0, heading = 0f))
     }
 
+    @Test
+    fun `미뤄 둔 장소는 멀어지거나 지나쳤으면 더 이상 안내 대상이 아니다`() {
+        val poi = Poi("p", "명소", "", origin.latitude + 700 / 111_000.0, origin.longitude, 100f, "", "")
+        val planner = NarrationPlanner(listOf(poi))
+        assert(planner.isStillAhead(poi, origin.latitude, origin.longitude, heading = 0f))
+        // 10km 떨어진 곳으로 이동
+        assert(!planner.isStillAhead(poi, origin.latitude - 10_000 / 111_000.0, origin.longitude, heading = 0f))
+        // 600m 지나친 뒤
+        assert(!planner.isStillAhead(poi, poi.latitude + 600 / 111_000.0, origin.longitude, heading = 0f))
+    }
+
     // endregion
 }
