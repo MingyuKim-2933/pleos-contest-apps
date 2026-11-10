@@ -1,0 +1,16 @@
+<resources>
+    <color name="bg">#0E1116</color>
+    <color name="surface">#181C23</color>
+    <color name="surface_high">#232833</color>
+    <color name="text_primary">#F2F4F7</color>
+    <color name="text_secondary">#A3ABB8</color>
+    <color name="accent">#7BD88F</color>
+    <color name="accent_container">#1F3524</color>
+    <color name="on_accent">#0A2410</color>
+
+    <!-- 점수 구간 색 (어두운 배경에서 대비 확보) -->
+    <color name="score_great">#7BD88F</color>
+    <color name="score_good">#4FD1C5</color>
+    <color name="score_ok">#F6C453</color>
+    <color name="score_bad">#F27A7A</color>
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 흰 바탕에 빨간 테두리의 제한속도 표지 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <solid android:color="#FFFFFF" />
+    <stroke
+        android:width="6dp"
+        android:color="#E53935" />
+</shape>

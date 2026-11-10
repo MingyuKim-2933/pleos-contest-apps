@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">에코 드라이빙 코치</string>
+
+    <string name="status_waiting">출발하면 자동으로 주행을 기록해요.</string>
+    <string name="status_driving">주행 기록 중</string>
+    <string name="status_demo">데모 주행을 준비하고 있어요.</string>
+
+    <string name="caption_live">실시간 점수</string>
+    <string name="caption_last">지난 주행</string>
+    <string name="caption_none">기록 없음</string>
+
+    <string name="speed_format">%1$d km/h</string>
+    <string name="counters_format">급가속 %1$d · 급제동 %2$d · 과속 %3$d</string>
+    <string name="instant_ev_format">순간 전비 %1$.1f km/kWh</string>
+    <string name="instant_fuel_format">순간 연비 %1$.1f L/100km</string>
+    <string name="energy_format">잔량 %1$d%%</string>
+
+    <string name="driving_hint">안전 운전을 위해\n주행 중에는 상세 리포트를 숨겨요.</string>
+
+    <string name="report_empty_title">아직 주행 기록이 없어요</string>
+    <string name="report_empty_body">출발하면 자동으로 기록이 시작되고, 주차하면 리포트를 보여드려요. 아래 데모 주행으로 먼저 체험해 보세요.</string>
+    <string name="report_title_format">%1$s · %2$s</string>
+    <string name="distance_format">%1$.1f km</string>
+    <string name="duration_format">%1$d분</string>
+    <string name="avg_ev_format">평균 전비 %1$.1f km/kWh</string>
+    <string name="avg_fuel_format">평균 연비 %1$.1f L/100km</string>
+    <string name="energy_used_format">사용 %1$d%%p</string>
+    <string name="count_format">%1$d회</string>
+
+    <string name="sub_accel">부드러운 가속</string>
+    <string name="sub_brake">부드러운 감속</string>
+    <string name="sub_speed">제한속도 준수</string>
+    <string name="sub_smooth">일정한 속도</string>
+    <string name="sub_idle">공회전 줄이기</string>
+
+    <string name="history_title">최근 주행 점수</string>
+    <string name="history_empty">주행 기록이 쌓이면 여기에 표시돼요</string>
+
+    <string name="action_start_demo">데모 주행 시작 (시연용)</string>
+    <string name="action_stop_demo">데모 종료하고 실제 차량 연결</string>
+    <string name="action_end_trip">주행 종료</string>
+</resources>

@@ -1,0 +1,90 @@
+package com.hdcontest.roadstory.core
+
+/**
+ * 위치 업데이트/근접 알림을 받아 "지금 안내할 장소"를 결정한다.
+ *
+ * - 반경 안에 처음 들어온 장소만 안내한다.
+ * - 같은 장소는 [cooldownMs] 동안 다시 안내하지 않는다.
+ * - 반경을 벗어났다가 다시 들어와도 쿨다운 중이면 무시한다.
+ *
+ * 플랫폼 의존성이 없는 순수 로직이라 단위 테스트로 검증한다.
+ */
+class NarrationPlanner(
+    pois: List<Poi>,
+    private val cooldownMs: Long = DEFAULT_COOLDOWN_MS,
+) {
+    private var poiById = pois.associateBy { it.id }
+    private val lastNarratedAt = mutableMapOf<String, Long>()
+    private val inside = mutableSetOf<String>()
+
+    val pois: Collection<Poi> get() = poiById.values
+
+    /**
+     * 안내 대상 목록을 바꾼다 (TourAPI 로 주변 장소를 새로 받았을 때).
+     * 이미 안내한 장소의 쿨다운은 유지한다. 새로 생긴 장소의 반경 안에 이미 있으면 다음 위치 업데이트에서 안내한다.
+     */
+    fun updatePois(pois: List<Poi>) {
+        poiById = pois.associateBy { it.id }
+        inside.retainAll(poiById.keys)
+    }
+
+    /**
+     * 위치 업데이트마다 호출. 새로 진입한 장소 중 가장 가까운 장소를 반환한다.
+     */
+    fun onLocation(latitude: Double, longitude: Double, nowMs: Long): Poi? {
+        val entered = mutableListOf<Pair<Poi, Double>>()
+        for (poi in poiById.values) {
+            val d = GeoUtils.distanceMeters(latitude, longitude, poi.latitude, poi.longitude)
+            if (d <= poi.radiusMeters) {
+                if (inside.add(poi.id)) entered += poi to d
+            } else {
+                inside.remove(poi.id)
+            }
+        }
+        return entered
+            .sortedBy { it.second }
+            .firstOrNull { canNarrate(it.first.id, nowMs) }
+            ?.first
+            ?.also { markNarrated(it.id, nowMs) }
+    }
+
+    /** 같은 ID 의 최신 장소 정보 (TourAPI 개요가 나중에 채워지는 경우를 위해). */
+    fun find(poiId: String): Poi? = poiById[poiId]
+
+    /** Pleos FusedLocation 근접 알림(ENTER) 수신 시 호출. */
+    fun onProximityEnter(poiId: String, nowMs: Long): Poi? {
+        val poi = poiById[poiId] ?: return null
+        inside.add(poiId)
+        if (!canNarrate(poiId, nowMs)) return null
+        markNarrated(poiId, nowMs)
+        return poi
+    }
+
+    fun onProximityExit(poiId: String) {
+        inside.remove(poiId)
+    }
+
+    /** 현재 위치 기준 가까운 장소 목록. */
+    fun nearby(latitude: Double, longitude: Double, heading: Float?, limit: Int = 5): List<NearbyPoi> =
+        poiById.values
+            .map { poi ->
+                val d = GeoUtils.distanceMeters(latitude, longitude, poi.latitude, poi.longitude)
+                val bearing = GeoUtils.bearingDegrees(latitude, longitude, poi.latitude, poi.longitude)
+                NearbyPoi(poi, d, GeoUtils.relativeSide(heading, bearing))
+            }
+            .sortedBy { it.distanceMeters }
+            .take(limit)
+
+    private fun canNarrate(poiId: String, nowMs: Long): Boolean {
+        val last = lastNarratedAt[poiId] ?: return true
+        return nowMs - last >= cooldownMs
+    }
+
+    private fun markNarrated(poiId: String, nowMs: Long) {
+        lastNarratedAt[poiId] = nowMs
+    }
+
+    companion object {
+        const val DEFAULT_COOLDOWN_MS = 30 * 60 * 1000L
+    }
+}
