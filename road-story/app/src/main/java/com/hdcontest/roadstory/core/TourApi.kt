@@ -191,7 +191,7 @@ object TourPoiMapper {
     fun toPoi(item: TourItem, overview: String?): Poi? {
         val type = TourContentType.fromCode(item.contentTypeId) ?: return null
         val category = TourNotability.categoryOf(item) ?: return null
-        val story = overview?.let(OverviewSummarizer::summarize).orEmpty()
+        val story = overview?.let(OverviewSummarizer::summarize)?.let(PoliteStyle::convert).orEmpty()
             .ifBlank { "한국관광공사에 등록된 ${category}${NarrationScript.copula(category)}." }
         return Poi(
             id = ID_PREFIX + item.contentId,
