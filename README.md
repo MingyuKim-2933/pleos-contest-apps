@@ -2,7 +2,7 @@
 
 | 폴더 | 앱 | 한 줄 소개 | 주요 SDK |
 |---|---|---|---|
-| [`road-story/`](road-story/README.md) | 여긴 어디 | 지나치는 명소 이야기를 음성으로 들려주고 "들러줘"로 경유지 추가 | FusedLocation, TTS, STT, NaviHelper |
+| [`road-story/`](road-story/README.md) | 여긴어디 | 지나치는 명소 이야기를 음성으로 들려주고 "들러줘"로 경유지 추가 | FusedLocation, TTS, STT, NaviHelper |
 | [`eco-coach/`](eco-coach/README.md) | 에코 드라이빙 코치 | 급가속·급제동·과속을 음성으로 코칭하고 주차 후 점수 리포트 제공 | Vehicle, NaviHelper, TTS (+ AAOS 차속) |
 
 두 앱의 공통 설계 원칙은 다음과 같습니다.
