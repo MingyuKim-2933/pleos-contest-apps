@@ -86,6 +86,8 @@ app/src/main/assets/pois.json   # 직접 고른 대표 명소·맛집 거리 (35
    ```
 4. `app`을 실행하고 **데모 주행**을 켠 뒤 **가이드 시작**을 누릅니다.
 
+빌드된 release APK는 저장소 루트의 [`apk/나그네들_여긴어디_release.apk`](../apk/나그네들_여긴어디_release.apk)에 있습니다.
+
 명령줄에서 빌드하고 테스트하려면 아래 명령을 씁니다.
 ```bash
 ./gradlew assembleDebug testDebugUnitTest

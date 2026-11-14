@@ -39,8 +39,22 @@ android {
         buildConfigField("String", "TOUR_API_KEY", "\"${env["TOUR_API_KEY"].orEmpty()}\"")
     }
 
+    // release 서명 정보도 .env 에서 읽는다. 없으면 release 빌드는 서명 없이 만들어진다.
+    val releaseStore = env["RELEASE_STORE_FILE"].orEmpty()
+    signingConfigs {
+        if (releaseStore.isNotEmpty()) {
+            create("release") {
+                storeFile = rootProject.file(releaseStore)
+                storePassword = env["RELEASE_STORE_PASSWORD"]
+                keyAlias = env["RELEASE_KEY_ALIAS"]
+                keyPassword = env["RELEASE_KEY_PASSWORD"]
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (releaseStore.isNotEmpty()) signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }

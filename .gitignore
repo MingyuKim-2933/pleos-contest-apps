@@ -15,3 +15,8 @@ captures/
 
 # 비밀 값
 .env
+road-story/keystore/
+*.jks
+
+# 공모전 제출용 release APK 는 올린다
+!apk/*.apk
