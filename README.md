@@ -45,8 +45,3 @@ cd road-story
 ## 사용한 Pleos Connect SDK · 공공 데이터
 - FusedLocation 1.1.3 · TextToSpeech 3.3.1 · SpeechToText 3.3.1 · NaviHelper 3.0.5
 - 한국관광공사 TourAPI 4.0 (출처: 한국관광공사)
-
----
-
-### 참고: 같은 저장소의 다른 프로젝트
-[`eco-coach/`](eco-coach/README.md) (에코 드라이빙 코치)는 같은 저장소에 있는 별도 실험 프로젝트이며, 이번 공모전 제출작에는 포함되지 않습니다.
