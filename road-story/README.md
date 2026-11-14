@@ -78,9 +78,11 @@ app/src/main/assets/pois.json   # 직접 고른 대표 명소·맛집 거리 (35
    pleos.clientId=발급받은_CLIENT_ID
    pleos.clientSecret=발급받은_CLIENT_SECRET
    ```
-   TourAPI로 실시간 주변 장소를 받으려면 [공공데이터포털](https://www.data.go.kr/data/15101578/openapi.do)에서 "한국관광공사_국문 관광정보 서비스_GW" 활용 신청을 한 뒤 인증키를 넣습니다. Encoding 키와 Decoding 키 어느 쪽이든 됩니다.
-   ```properties
-   tourapi.serviceKey=발급받은_인증키
+   TourAPI로 실시간 주변 장소를 받으려면 [공공데이터포털](https://www.data.go.kr/data/15101578/openapi.do)에서 "한국관광공사_국문 관광정보 서비스_GW" 활용 신청을 한 뒤, `.env.example`을 `.env`로 복사해 인증키를 넣습니다. Encoding 키와 Decoding 키 어느 쪽이든 됩니다. `.env`는 git에 올라가지 않습니다. 키가 없으면 내장 명소만 안내합니다.
+   ```bash
+   cp .env.example .env
+   # .env
+   TOUR_API_KEY=발급받은_인증키
    ```
 4. `app`을 실행하고 **데모 주행**을 켠 뒤 **가이드 시작**을 누릅니다.
 
@@ -93,7 +95,8 @@ app/src/main/assets/pois.json   # 직접 고른 대표 명소·맛집 거리 (35
 - ✅ `assembleDebug` 빌드, 단위 테스트 49개 통과
 - ✅ TourAPI 실제 키로 에뮬레이터 데모 주행 확인 (판교 주변 관광지·맛집 조회, 개요 안내, 출처 표시)
 - ⚠️ 공공데이터포털 개발 계정은 하루 호출 수 제한이 있습니다. 상용 단계에서는 운영 계정 전환이나 서버 캐시가 필요합니다.
-- ⚠️ **Pleos Connect 에뮬레이터나 실차에서는 아직 실행해 보지 않았습니다.** SDK 서비스와 연결하는 부분은 에뮬레이터에서 꼭 확인해 주세요.
+- ✅ Pleos Connect 에뮬레이터에서 데모 주행으로 TTS 안내 → 음성 "들러줘" 인식(STT) → NaviHelper 목적지 설정 → 내비게이션 길 안내까지 확인
+- ⚠️ 실차에서는 아직 실행해 보지 않았습니다.
 - ⚠️ `pois.json`의 좌표와 설명은 시연용으로 직접 작성했습니다. 공개 전에 한국관광공사 TourAPI 같은 공식 데이터로 교체하거나 검수하는 것을 권장합니다.
 - ⚠️ NaviHelper에 경유지를 요청할 때 내비 POI ID 없이 좌표만 보냅니다(`poiId = ""`). 내비 앱이 POI ID를 요구하면 검색 연동이 필요할 수 있습니다.
 - ⚠️ 문서에는 FusedLocation 1.1.2로 안내되어 있지만 Maven 저장소에는 1.1.3만 있어서 1.1.3을 씁니다.

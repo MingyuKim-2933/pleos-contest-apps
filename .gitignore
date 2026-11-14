@@ -12,3 +12,6 @@ captures/
 
 # macOS
 .DS_Store
+
+# 비밀 값
+.env

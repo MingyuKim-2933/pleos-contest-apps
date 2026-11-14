@@ -12,6 +12,15 @@ val localProps = Properties().apply {
     if (file.exists()) file.inputStream().use { load(it) }
 }
 
+// 외부 API 키는 프로젝트 루트의 .env 에서 읽는다 (git 에 올리지 않음, 형식은 .env.example 참고).
+val env: Map<String, String> = rootProject.file(".env").let { file ->
+    if (!file.exists()) emptyMap()
+    else file.readLines()
+        .map { it.trim() }
+        .filter { it.isNotEmpty() && !it.startsWith("#") && it.contains('=') }
+        .associate { line -> line.substringBefore('=').trim() to line.substringAfter('=').trim().removeSurrounding("\"") }
+}
+
 android {
     namespace = "com.hdcontest.roadstory"
     compileSdk = 35
@@ -26,8 +35,8 @@ android {
 
         buildConfigField("String", "PLEOS_CLIENT_ID", "\"${localProps.getProperty("pleos.clientId", "")}\"")
         buildConfigField("String", "PLEOS_CLIENT_SECRET", "\"${localProps.getProperty("pleos.clientSecret", "")}\"")
-        // 공공데이터포털 > 한국관광공사_국문 관광정보 서비스_GW 인증키. 비어 있으면 내장 명소(pois.json)만 쓴다.
-        buildConfigField("String", "TOUR_API_KEY", "\"${localProps.getProperty("tourapi.serviceKey", "")}\"")
+        // 공공데이터포털 > 한국관광공사_국문 관광정보 서비스_GW 인증키 (.env 의 TOUR_API_KEY). 비어 있으면 내장 명소(pois.json)만 쓴다.
+        buildConfigField("String", "TOUR_API_KEY", "\"${env["TOUR_API_KEY"].orEmpty()}\"")
     }
 
     buildTypes {
