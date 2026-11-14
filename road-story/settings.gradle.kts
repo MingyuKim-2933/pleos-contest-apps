@@ -16,5 +16,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "RoadStory"
+rootProject.name = "YeoginEodi"
 include(":app")

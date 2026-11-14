@@ -61,6 +61,6 @@ class TourApiClient(serviceKey: String) {
     private companion object {
         const val BASE_URL = "https://apis.data.go.kr/B551011/KorService2"
         const val TIMEOUT_MS = 8_000
-        val COMMON = mapOf("MobileOS" to "AND", "MobileApp" to "RoadStory", "_type" to "json")
+        val COMMON = mapOf("MobileOS" to "AND", "MobileApp" to "YeoginEodi", "_type" to "json")
     }
 }

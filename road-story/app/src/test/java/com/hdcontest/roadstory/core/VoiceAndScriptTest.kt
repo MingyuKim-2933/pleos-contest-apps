@@ -15,7 +15,7 @@ class VoiceAndScriptTest {
 
     @Test
     fun `부정 표현은 방문보다 우선한다`() {
-        listOf("아니 안 들러도 돼", "괜찮아", "다음에 갈게").forEach {
+        listOf("아니 안 들러도 돼", "괜찮아", "다음에 갈게", "건너뛰기", "건너뛰어 줘").forEach {
             assertEquals(it, VoiceIntent.DECLINE, VoiceIntentParser.parse(it))
         }
     }
@@ -24,6 +24,7 @@ class VoiceAndScriptTest {
     fun `다시 듣기와 빈 입력`() {
         assertEquals(VoiceIntent.REPEAT, VoiceIntentParser.parse("다시 말해줘"))
         assertEquals(VoiceIntent.REPEAT, VoiceIntentParser.parse("다시 들려줘"))
+        assertEquals(VoiceIntent.REPEAT, VoiceIntentParser.parse("다시 듣기"))
         assertEquals(VoiceIntent.UNKNOWN, VoiceIntentParser.parse(null))
         assertEquals(VoiceIntent.UNKNOWN, VoiceIntentParser.parse("오늘 날씨 어때"))
     }

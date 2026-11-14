@@ -1,5 +1,5 @@
 <resources>
-    <style name="Theme.RoadStory" parent="Theme.Material3.Dark.NoActionBar">
+    <style name="Theme.YeoginEodi" parent="Theme.Material3.Dark.NoActionBar">
         <item name="colorPrimary">@color/accent</item>
         <item name="colorOnPrimary">@color/on_accent</item>
         <item name="colorPrimaryContainer">@color/accent_container</item>
@@ -13,7 +13,7 @@
         <item name="android:navigationBarColor">@color/bg</item>
     </style>
 
-    <style name="Widget.RoadStory.BigButton" parent="Widget.Material3.Button">
+    <style name="Widget.YeoginEodi.BigButton" parent="Widget.Material3.Button">
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
         <item name="cornerRadius">24dp</item>
@@ -21,7 +21,7 @@
         <item name="android:insetBottom">0dp</item>
     </style>
 
-    <style name="Widget.RoadStory.BigButton.Tonal" parent="Widget.Material3.Button.TonalButton">
+    <style name="Widget.YeoginEodi.BigButton.Tonal" parent="Widget.Material3.Button.TonalButton">
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
         <item name="cornerRadius">24dp</item>

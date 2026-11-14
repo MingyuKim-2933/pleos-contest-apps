@@ -22,7 +22,7 @@ class GuideService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == ACTION_STOP) {
-            (application as RoadStoryApp).engine.stop()
+            (application as YeoginEodiApp).engine.stop()
             stopSelf()
             return START_NOT_STICKY
         }

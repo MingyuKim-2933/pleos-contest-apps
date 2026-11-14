@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    private val engine by lazy { (application as RoadStoryApp).engine }
+    private val engine by lazy { (application as YeoginEodiApp).engine }
     private val nearbyAdapter = NearbyAdapter()
 
     private lateinit var phaseText: TextView
